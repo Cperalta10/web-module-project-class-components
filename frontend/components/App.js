@@ -24,19 +24,56 @@ export default class App extends React.Component {
     };
   }
 
+  toggleCompleted = (todoId) => {
+    this.setState({
+      data: this.state.data.map((todo) => {
+        if (todo.id === todoId) {
+          return {
+            ...todo,
+            completed: !todo.completed,
+          };
+        }
+        return todo;
+      }),
+    });
+  };
+
   todoOnChange = (e) => {
     this.setState({
       todoInput: e.target.value,
     });
   };
 
+  addTodo = (e) => {
+    e.preventDefault();
+
+    const newTodo = {
+      name: this.state.todoInput,
+      id: Date.now(),
+      completed: false,
+    };
+
+    this.setState({
+      ...this.state,
+      data: [...this.state.data, newTodo],
+    });
+
+    this.setState({
+      todoInput: "",
+    });
+  };
+
   render() {
     return (
       <div>
-        <TodoList data={this.state.data} />
+        <TodoList
+          data={this.state.data}
+          toggleCompleted={this.toggleCompleted}
+        />
         <Form
           todoOnChange={this.todoOnChange}
           todoInput={this.state.todoInput}
+          addTodo={this.addTodo}
         />
       </div>
     );
